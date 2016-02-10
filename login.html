@@ -1,0 +1,76 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script language="javascript">
+     window.onload=function(){
+		 
+    var  code="";
+    document.getElementById('code').onclick=function(){
+	   code = "";
+       var codeLength = 4;//验证码的长度   
+       var selectChar = new Array(0,1,2,3,4,5,6,7,8,9,'A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V','W','X','Y','Z');//所有候选组成验证码的字符，当然也可以用中文的   
+          
+       for(var i=0;i<codeLength;i++)   
+       {   
+            var charIndex = Math.floor(Math.random()*36);   
+            code+=selectChar[charIndex];   
+	}
+	document.getElementById('code').innerText=code;
+	    }
+	document.getElementById('bsubmit').onclick=function(){
+		
+	    if(document.getElementById('uname').value==""){
+		alert("请填写用户名");
+		return false;
+		}
+		if(document.getElementById('code_input').value!=code||document.getElementById('code_input').value==""){
+			alert("验证码不正确！");
+			return false;
+			}
+			
+	    }
+	 }
+</script>
+<style>
+#code{width:80px;height:30px;margin:-31px 0 0 220px;border:1px black solid; font-size:24px;text-align:center; cursor:pointer;}
+#footer{ margin:0px auto; color:#666; font-size:12px; margin-top:30px;} 
+    #footer hr{width:800px;}
+    #footer ul li{ list-style-type:none;}  
+</style>
+</head>
+<body>
+<center>
+<img src="images/US60/logo2.jpg"/>
+<form method="post" action="#">
+<table cellspacing="20">
+<tr>
+    <td style="font-size:24px; color:#399;">用户名</td>
+    <td><input type="text" id="uname"  style="width:300px;height:30px;font-size:20px"/></td>
+</tr>
+<tr>
+    <td style="font-size:24px; color:#399;">密&nbsp;&nbsp;&nbsp;&nbsp;码</td>
+    <td><input type="password"  style="width:300px;height:30px;font-size:20px"/></td>
+</tr>
+<tr>
+    <td  style="font-size:24px; color:#399;">验证码</td>
+    <td><input type="text" style="width:200px;height:30px;font-size:20px;" id="code_input"/><div id="code">S5G6</div></td>
+</tr>
+<tr>
+    <td>&nbsp;</td>
+    <td style="font-size:24px; color:#399;text-align:right;"><input type="submit"value="登&nbsp;&nbsp;陆"  id="bsubmit" style="width:100px;height:30px;font-size:20px; background-color:#FFFFFF;"/></td>
+    
+</tr>
+</table>
+
+</form>
+</center>
+<div id="footer">
+    <hr/>
+	<ul>
+		<li><center>关于On the way | 投资者关系 | 酒店加盟 | 业务合作 | 职位招聘 | 我要投诉 | 安全中心 |About us</center></li>
+        <li><center>Copyright ©2014 Ontheway.com京公网安备110108901531京ICP备05021088号在路上网客服电话10011234</center></li>
+        <center> <li><img src="images/US60/renzheng.jpg"></li> </center> 
+	</ul>
+</div>
+</body>
+</html>
