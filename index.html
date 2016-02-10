@@ -1,0 +1,181 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+<style type="text/css">
+* {
+	margin:0;
+	padding:0;
+	list-style-type:none;
+}
+
+a, img {
+	border:0;
+}
+body {
+	font:12px/180% Tahoma, Geneva, sans-serif;
+}
+
+/* Carousel */
+#carousel1 {
+	
+	width:960px;
+	height:400px;
+	overflow:hidden;
+	position:relative;
+	border-bottom:solid 1px #d8d9da;
+	margin:0 auto;
+}
+#carousel1 img {
+	border:none;
+
+	border:solid 0px #000;
+}
+#carousel1 #title-text {
+	font-size:22px;
+	margin:10px 20px 0 0;
+	padding:0;
+	text-align:right;
+}
+#carousel1 #alt-text {
+	font-size:14px;
+	margin:5px 20px 0 0;
+	padding:0;
+	text-align:right;
+}
+#carousel1 #user-c {
+	padding:0;
+	position:absolute;
+	right:15px;
+	bottom:10px;
+}
+#carousel1 .carouselLeft, #carousel1 .carouselRight {
+	position:absolute;
+	bottom:20px;
+	width:29px;
+	height:30px;
+	overflow:hidden;
+	cursor:pointer;
+}
+#carousel1 .carouselLeft {
+	right:60px;
+	background:url(images/templatemo_slider_right.png) no-repeat;
+}
+#carousel1 .carouselRight {
+	right:808px;
+	background:url(images/templatemo_slider_left.png) no-repeat;
+}
+
+</style>
+<script type="text/javascript" src="script/jquery.js"></script>
+<script type="text/JavaScript" src="script/CloudCarousel.1.0.5.js"></script>
+<script type="text/JavaScript" src="script/jquery.mousewheel.js"></script><!--鼠标滚动插件-->
+<script type="text/javascript">
+$(document).ready(function(){						   
+	// 这初始化容器中指定的元素，在这种情况下，旋转木马.
+	$("#carousel1").CloudCarousel({			
+		xPos:450,
+		yPos:110,
+		buttonLeft: $('#but1'),
+		buttonRight: $('#but2'),
+		altBox: $("#alt-text"),
+		titleBox: $("#title-text"),				
+		FPS:30,
+		reflHeight:86,
+		reflGap:2,
+		yRadius:40,
+		autoRotateDelay: 1200,
+		speed:0.2,
+		mouseWheel:true,
+		bringToFront:true
+	});	
+});
+</script>
+
+<title>On The Way</title>
+<style type="text/css">
+#header{width:1000px;height:auto;margin:0px auto;}
+#adr{width:100px;height:150px;position:fixed;margin-left:1200px;}
+    #adr_font1{color:#399;font-size:18px;}
+	#adr_font2{color:red;font-size:12px;}
+#container{width:1000px;margin:0px auto;margin-top:50px;}
+#container #write1{color:#666;}
+    #show1{width:1000px;height:250px;margin:0px auto;margin-top:20px;}
+        #show1_left{width:600px;height:250px;float:left;}
+	    #show1_right{width:350px;height:250px;float:right;}
+		 #show1_right font{color:#666;font-size:18px; vertical-align:bottom;}
+	#show2{width:1000px;height:250px;margin:0px auto;margin-top:20px;}
+        #show2_left{width:350px;height:250px;float:left;}
+		    #show2_left font{color:#666;font-size:18px; vertical-align:bottom;}
+	    #show2_right{width:600px;height:250px;float:right;}
+	   #show2_right img{width:600px;height:250px;}
+#footer2{ margin:400px 0 0 0;color:#666; font-size:12px; margin-top:30px;} 
+    #footer2 hr{width:800px;}
+    #footer2 ul li{ list-style-type:none;} 
+	a{ text-decoration:none;}
+	a:hover{color:#399;};
+</style>
+</head>
+
+<body bgcolor="#F1F1F1">
+
+<!-----------------------------------------------头完成------------------------------------------------>
+<div id="header">
+    <img src="images/US59/logo10.jpg"/>
+    <h3 style="text-align:right;"><a href="login.html">登陆</a>&nbsp;<a href="注册表.html">注册</a></h3>
+</div>
+<div id="adr"><br/><font id="adr_font1">On The Way</font><hr /><font id="adr_font2">我们一路陪伴您</font></div>
+<!-------------------------------------------页头开始---------------------------------------------------------------->
+
+<!-------------------------------------------页头完成---------------------------------------------------------------->
+<!-------------------------------------------旋转开始---------------------------------------------------------------->
+<div id="carousel1" >
+  <p id="alt-text"></p>
+  <a href="zuji.html"target="_blank">
+  <img class="cloudcarousel"  src="images/US59/hk2.jpg" width="230" height="141" title="足迹"/></a> 
+  <a href="tuce.html" target="_blank" >
+  <img class="cloudcarousel"  src="images/US59/hk3.jpg" width="230" height="141" title="图册"/></a> 
+<a href="gonglue.html" target="_blank">
+  	<img class="cloudcarousel"  src="images/US59/japan5.jpg" width="230" height="128"title="攻略"/></a>
+  <a href="youji.html"target="_blank">
+  	<img class="cloudcarousel"   src="images/US59/japan6.jpg"  width="263" height="147"title="游记"/></a> 
+  <a href="zuji.html"target="_blank">
+  	<img class="cloudcarousel"  src="images/US59/uk7.jpg" width="245" height="142"title="足迹"/></a> 
+  <a href="tuce.html"target="_blank">
+  	<img class="cloudcarousel"  src="images/US59/uk10.jpg" width="232" height="162"title="图册"/></a>
+  <a href="youji.html"target="_blank">
+  	<img class="cloudcarousel"  src="images/US59/uk6.jpg" width="230" height="145"title="游记"/></a>  
+  
+  <div id="but1" class="carouselLeft"></div>
+  <div id="but2" class="carouselRight"></div>
+</div>
+<!-------------------------------------------旋转完成---------------------------------------------------------------->
+<!-------------------------------------------主体开始---------------------------------------------------------------->
+<div id="container">
+<font id="write1">
+I think most people like traveling because they can feel the beauty of the nature and breathe the fresh air at the same time. What's more they can make friends. But there are some disadvantages of travelling, such as, the weather may change quickly and you may be wet in the rain. So my suggestion is that before you travel, you should listen to the weather report and get to know about the weather and you'd better travel with others so that you are not into trouble.
+</font>
+<div id="show1">
+     <div id="show1_left"><a href="tuce.html"><img src="images/US59/lbj1.jpg" /></a></div><div id="show1_right"><font>在蒙古西南部，戈壁区的最西部，蒙古阿尔泰山脉和戈壁阿尔泰山脉的南侧。中国准噶尔盆地的东延部分。地形起伏，一般高700—1，800米，有呈东西和西北—东南走向山脉，最高峰阿塔斯峰海拔2，702米。地面裸露，荒凉贫瘠，水井稀少，杳无人烟。中部为一片龟裂盐地。</font></div>
+</div>
+<div id="show2">
+     <div id="show2_left"><font>故宫，世界文化遗产，全国重点文物保护单位，国家AAAAA级旅游景区。故宫旧称紫禁城。于明代永乐十八年（1420年）建成，建成后3月即失火烧毁，20年后重建。是明、清两代的皇宫，两代24位皇帝在此处理政务和生活起居的地方。它是汉族宫殿建筑之精华，无与伦比的古代建筑杰作，世界现存最大、最完整的木质结构的古建筑群<a href="tuce.html">...</a></font></div><div id="show2_right"><a href="tuce.html"><img src="images/US59/gugong.jpg"/></a></div>
+</div>
+
+</div>
+<!------------------------------------container end------------------------------------------------------------------->
+<div id="footer2">
+<center><a href="zuji.html">让我们来一场说走就走的旅行！</a></center>
+    <hr/>
+	<ul>
+		<li><center>关于On the way | 投资者关系 | 酒店加盟 | 业务合作 | 职位招聘 | 我要投诉 | 安全中心 |About us</center></li>
+        <li><center>Copyright ?2014 Ontheway.com京公网安备110108901531京ICP备05021088号在路上网客服电话10011234</center></li>
+        <center> <li><img src="images/US60/renzheng.jpg"></li></center> 
+	</ul>
+</div>
+</body>
+</html>
+
