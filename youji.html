@@ -1,0 +1,634 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>无标题文档</title>
+<script language="javascript">
+<!--
+function getPageSize()
+{
+    this.x = document.getElementsByTagName('html').item(0).clientWidth||document.getElementsByTagName('html').item(0).offsetWidth||document.body.offsetWidth||innerWidth
+    this.y = document.getElementsByTagName('html').item(0).clientHeight||document.getElementsByTagName('html').item(0).offsetHeight||document.body.offsetHeight||innerHeight
+    this.x2 = parseInt(this.x/2)||0
+    this.y2 = parseInt(this.y/2)||0
+    this.sx = document.body.scrollWidth||0
+    this.sy = document.body.scrollHeight||0
+}
+var pg
+
+var pi = 3.1415
+
+function spinMenu(cls,rad,eSpd,rSpd,dir,x,y,noCt,runEx)
+{
+    pg = new getPageSize()
+    this.cls = cls
+    this.rad = rad
+    this.eSpd = eSpd
+    this.rSpd = rSpd
+    this.dir = dir ? 1 : -1
+    this.x = x<0 ? pg.x2 : x
+    this.y = y<0 ? pg.y2 : y
+    this.runEx = runEx||0
+    this.noCt = noCt||0
+    this.r = 0           // radius flux
+    this.ex = 0           // expand timeout
+    this.ct = 0           // contract timeout
+    this.rt = 1           // rotate timeout
+    this.vis = 0           // visibility
+    this.rNum = 0           // rotational flux
+    this.rSpd2 = 0           // rSpd holder
+    this.exDone = 0           // expand complete?
+    this.ctDone = 1           // contract complete?
+    this.toFig = 0
+    this.atX = 0
+    this.atY = 0
+    this.url = 0
+    this.target = 0
+    eval(this.obj + "=this")
+    this.items = new Array()
+    this.el = document.getElementsByTagName('div')
+    for(i=0;(this.el.item(i));i++)
+    {
+        if(this.el.item(i).className==this.cls)
+        {
+            this.el.item(i).onmouseover = new Function(this.obj+'.stop()')
+            this.el.item(i).onmouseout = new Function(this.obj+'.rotate()')
+            this.el.item(i).onclick = new Function(this.obj+'.contract()')
+            this.items[this.items.length] = this.el.item(i)
+        }
+    }
+    delete this.el
+    for(i=0;(this.items[i]);i++)
+    {
+        if(!this.items[i].childNodes.item(0).nodeValue)
+        {
+            this.items[i].childNodes.item(0).onmouseover = new Function('status=this.href;return true')
+            this.items[i].childNodes.item(0).onmouseout = new Function('status=\'\';return true')
+            this.items[i].childNodes.item(0).onclick = new Function(this.obj+'.setURL(this.href,this.target);return false')
+            this.items[i].childNodes.item(0).onfocus = new Function('this.blur()')
+        }
+    }
+    return this
+}
+spinMenu.prototype.init = function()
+{
+    this.hide()
+    this.place()
+    this.expand()
+}
+spinMenu.prototype.rotate = function()
+{
+    if(this.rSpd)
+    {
+        this.rNum += pi/(1000/this.rSpd)*this.dir
+        if(this.exDone)
+        {
+            this.place()
+            clearTimeout(this.rt)
+            this.rt = setTimeout(this.obj+'.rotate()',20)
+        }
+    }
+}
+spinMenu.prototype.stop = function()
+{
+    clearTimeout(this.rt)
+    this.rt = 0
+}
+spinMenu.prototype.expand = function()
+{
+    if(this.exDone!=1)
+    {
+        this.ctDone=0
+        if(!this.vis) this.show()
+        if(this.runEx) eval(this.runEx)
+        if(this.ct!=0)
+        {
+            clearTimeout(this.ct)
+            this.ct = 0
+        }
+        if(this.r<this.rad)
+        {
+            this.r += this.eSpd
+            if(this.rSpd2==0) this.rSpd2 = this.rSpd
+            this.rSpd = this.eSpd*3
+            this.rotate()
+            this.place()
+            this.ex = setTimeout(this.obj+'.expand()',10)
+        }
+        else
+        {
+            this.ex = 0
+            this.rSpd = this.rSpd2
+            this.rSpd2 = 0
+            this.ctDone = 0
+            this.exDone = 1
+            this.rotate()
+        }
+    }
+}
+spinMenu.prototype.contract = function()
+{
+    if(this.ctDone!=1&&!this.noCt)
+    {
+        this.exDone = 0
+        if(this.ex!=0)
+        {
+            clearTimeout(this.ex)
+            this.ex = 0
+        }
+        if(this.r>0)
+        {
+            this.r -= this.eSpd
+            if(this.rSpd2==0) this.rSpd2 = this.rSpd
+            this.rSpd = this.eSpd
+            this.rotate()
+            this.place()
+            this.ct = setTimeout(this.obj+'.contract()',10)
+        }
+        else
+        {
+            this.rSpd = this.rSpd2
+            this.rSpd2 = 0
+            this.rNum = 0
+            this.stop()
+            this.hide()
+            this.exDone = 0
+            this.ctDone = 1
+            this.goURL()
+        }
+    }
+    else this.goURL()
+}
+spinMenu.prototype.place = function()
+{
+    for(i=0;(this.items[i]);i++)
+    {
+        this.atPt(i)
+        this.items[i].style.left = this.atX-(this.items[i].offsetWidth/2)+'px'
+        this.items[i].style.top = this.atY-(this.items[i].offsetHeight/2)+'px'
+    }
+}
+spinMenu.prototype.atPt = function(pt)
+{
+    this.toFig = pi/(this.items.length/2)*(pt+this.rNum)
+    this.atX = parseInt(Math.cos(this.toFig)*this.r+this.x)
+    this.atY = parseInt(Math.sin(this.toFig)*this.r+this.y)
+}
+spinMenu.prototype.show = function()
+{
+    for(i=0;(this.items[i]);i++)
+    {
+        this.items[i].style.display = 'block'
+        this.items[i].style.visibility = 'visible'
+        this.vis = 1
+    }
+}
+spinMenu.prototype.hide = function()
+{
+    for(i=0;(this.items[i]);i++)
+    {
+        this.items[i].style.visibility = 'hidden'
+        this.items[i].style.display = 'none'
+        this.vis = 0
+    }
+}
+spinMenu.prototype.changeDir = function()
+{
+    this.dir = this.dir==1 ? -1 : 1
+}
+spinMenu.prototype.setURL = function(url,target)
+{
+    this.url = url
+    this.target = target
+}
+spinMenu.prototype.goURL = function()
+{
+    if(this.url)
+    {
+        if(!this.target)
+            if(document.getElementsByTagName('base').length) this.target = document.getElementsByTagName('base').item(0).target
+        if(this.target)
+        {
+            if(this.target=='_blank') open(this.url)
+            else if(this.target=='_parent') parent.location = this.url
+            else if(this.target=='_top') top.location = this.url
+            else if(this.target.indexOf('_')<0)
+            {
+                if(eval('parent.'+this.target)) eval('parent.'+this.target+'.document.location=this.url')
+                else if(eval('top.'+this.target)) eval('top.'+this.target+'.document.location=this.url')
+                else open(this.url,this.target)
+            }
+            else location = this.url
+        }
+        else location = this.url
+        this.url = 0
+    }
+}
+
+
+function centerIt() 
+{ 
+pg = new getPageSize() 
+menu.x = pg.x2-10 
+menu.y = pg.y2 
+} 
+function initSpinMenu() 
+{ 
+menu = new spinMenu( 
+'spin',           // className 
+150,           // radius 
+10,           // expand/contract speed 
+3,           // rotational speed 
+1,           // direction (cw=1,ccw=0) 
+0,           // origin x 
+-1,           // origin y 
+0,           // stay expanded? 
+0           // run before expand 
+) 
+menu.init() 
+} 
+onload=initSpinMenu 
+onresize=centerIt 
+//-->
+</script>
+<style type="text/css">
+#ad1{  width:120px; height:200px; position:fixed; margin-top:150px; margin-left:50px; }
+#container{ width:100%; height:2500px; }
+#navigation{  width:940px; height:250px; margin-left:160px; background:url(images/US61/daohang4.jpg)}
+#top{  width:100%; height:400px; margin-top:20px;}
+#top_table { width:900px; height:100%; margin-left:180px; border-style:none;}
+#top_table tr{text-align:center; font-size:16px;}
+#top_table tr td a:link{ text-decoration:none; color:#000;}
+#top_table tr td { width:25%; }
+#content{  width:900px; height:500px; margin-left:180px; background:url(images/US61/bg/sea1.jpg);}
+ #content_left{ width:200px; height:100%; float:left;}
+ #content_middle{ width:500px; height:500px; float:left; font : 12px Verdana; position:absolute; margin-top:0px; margin-left:200px;} 
+ 	#spin{position:absolute; margin-top:0px; margin-left:250px;}
+   #content_middle A { color:#000; } 
+    #content_middle A:hover { text-decoration : none ;} 
+     #content_middle .spin { position : absolute; visibility : hidden; z-index : auto; } 
+#content_middle.spin A { font : 12px Verdana; text-decoration : none; color:#6F0; } 
+#content_middle.spin A:hover { text-decoration : underline overline; } 
+ #content_right{ width:200px; height:100%; float:right;}
+#footer{ width:900px; height:1500px; margin-left:180px;}
+ #footer_left{width:600px; height:100%; float:left;}
+   #footer_left_top{ font-size:14px; font-family: Tahoma, Geneva, sans-serif;width:100%; height:50%}
+#footer_right{ width:300px; height:100%; float:left;}
+ #footer_right_top{width:161px; height:68px; margin-left:100px; margin-top:150px;}
+ #footer_right_middle{ width:200px; height:240px; margin-left:80px; margin-top:50px;}
+ #footer_right_middle a:link{ text-align:right; text-decoration:none; color:#000}
+#footer_right_footer{ width:200px; height:700px;  margin-left:80px; margin-top:150px;}
+#footer_right_footer #select{ width:200px; height:100px; border:#C9F;}
+#footer2{ margin:400px 0 0 0;color:#666; font-size:12px; margin-top:30px;} 
+    #footer2 hr{width:800px;}
+    #footer2 ul li{ list-style-type:none;}  
+</style>
+</style>
+</head>
+
+<body>
+<!----------------------------------------------广告一开始--------------------------------------------->
+	<div id="ad1">
+    	<script language="JavaScript">
+<!--
+var  bsYear;
+var  bsDate;
+var  bsWeek;
+var  arrLen=8;	//数组长度
+var  sValue=0;	//当年的秒数
+var  dayiy=0;	//当年第几天
+var  miy=0;	//月份的下标
+var  iyear=0;	//年份标记
+var  dayim=0;	//当月第几天
+var  spd=86400;	//每天的秒数
+
+var  year1999="30;29;29;30;29;29;30;29;30;30;30;29";	//354
+var  year2000="30;30;29;29;30;29;29;30;29;30;30;29";	//354
+var  year2001="30;30;29;30;29;30;29;29;30;29;30;29;30";	//384
+var  year2002="30;30;29;30;29;30;29;29;30;29;30;29";	//354
+var  year2003="30;30;29;30;30;29;30;29;29;30;29;30";	//355
+var  year2004="29;30;29;30;30;29;30;29;30;29;30;29;30";	//384
+var  year2005="29;30;29;30;29;30;30;29;30;29;30;29";	//354
+var  year2006="30;29;30;29;30;30;29;29;30;30;29;29;30";
+
+var  month1999="正月;二月;三月;四月;五月;六月;七月;八月;九月;十月;十一月;十二月"
+var  month2001="正月;二月;三月;四月;闰四月;五月;六月;七月;八月;九月;十月;十一月;十二月"
+var  month2004="正月;二月;闰二月;三月;四月;五月;六月;七月;八月;九月;十月;十一月;十二月"
+var  month2006="正月;二月;三月;四月;五月;六月;七月;闰七月;八月;九月;十月;十一月;十二月"
+var  Dn="初一;初二;初三;初四;初五;初六;初七;初八;初九;初十;十一;十二;十三;十四;十五;十六;十七;十八;十九;二十;廿一;廿二;廿三;廿四;廿五;廿六;廿七;廿八;廿九;三十";
+
+var  Ys=new  Array(arrLen);
+Ys[0]=919094400;Ys[1]=949680000;Ys[2]=980265600;
+Ys[3]=1013443200;Ys[4]=1044028800;Ys[5]=1074700800;
+Ys[6]=1107878400;Ys[7]=1138464000;
+
+var  Yn=new  Array(arrLen);      //农历年的名称
+Yn[0]="庚辰年";Yn[1]="辛巳年";Yn[2]="壬午年";
+Yn[3]="癸未年";Yn[4]="甲申年";Yn[5]="乙酉年";
+Yn[6]="丙戌年";Yn[7]="丁亥年";
+var  D=new  Date();
+var  yy=D.getYear();
+var  mm=D.getMonth()+1;
+var  dd=D.getDate();
+var  ww=D.getDay();
+if  (ww==0)  ww="<font  color=RED>星期日</font>";
+if  (ww==1)  ww="星期一";
+if  (ww==2)  ww="星期二";
+if  (ww==3)  ww="星期三";
+if  (ww==4)  ww="星期四";
+if  (ww==5)  ww="星期五";
+if  (ww==6)  ww="<font  color=green>星期六</font>";
+ww=ww;
+var  ss=parseInt(D.getTime()  /  1000);
+if  (yy<100)  yy="19"+yy;
+
+for  (i=0;i<arrLen;i++)
+if  (ss>=Ys[i]){
+iyear=i;
+sValue=ss-Ys[i];        //当年的秒数
+}
+dayiy=parseInt(sValue/spd)+1;        //当年的天数
+
+var  dpm=year1999;
+if  (iyear==1)  dpm=year2000;
+if  (iyear==2)  dpm=year2001;
+if  (iyear==3)  dpm=year2002;
+if  (iyear==4)  dpm=year2003;
+if  (iyear==5)  dpm=year2004;
+if  (iyear==6)  dpm=year2005;
+if  (iyear==7)  dpm=year2006;
+dpm=dpm.split(";");
+
+var  Mn=month1999;
+if  (iyear==2)  Mn=month2001;
+if  (iyear==5)  Mn=month2004;
+if  (iyear==7)  Mn=month2006;
+Mn=Mn.split(";");
+
+var  Dn="初一;初二;初三;初四;初五;初六;初七;初八;初九;初十;十一;十二;十三;十四;十五;十六;十七;十八;十九;二十;廿一;廿二;廿三;廿四;廿五;廿六;廿七;廿八;廿九;三十";
+Dn=Dn.split(";");
+
+dayim=dayiy;
+
+var  total=new  Array(13);
+total[0]=parseInt(dpm[0]);
+for  (i=1;i<dpm.length-1;i++)  total[i]=parseInt(dpm[i])+total[i-1];
+for  (i=dpm.length-1;i>0;i--)
+if  (dayim>total[i-1]){
+dayim=dayim-total[i-1];
+miy=i;
+}
+bsWeek=ww;
+bsDate=yy+"年"+mm+"月";
+bsDate2=dd;
+bsYear="农历"+Yn[iyear];
+bsYear2=Mn[miy]+Dn[dayim-1];
+if  (ss>=Ys[7]||ss<Ys[0])  bsYear=Yn[7];
+function  time(){
+document.write("<table  border='0'  style='font-size:  8pt;  font-family:Tahoma'  cellspacing='0'  width='90'  bordercolor='#cccccc'    height='110'  cellpadding='0'");
+document.write("<tr><td  align='center'  style='border:  1  solid  #0099ff;padding-top:4px'><b><font  color=#3366cc>"+bsDate+"</font><br><span  style='font-family:  Arial  Black;font-size:18pt;color:#FF0000'>"+bsDate2+"</span><br><br><span  style='FONT-SIZE:  10.5pt;color:#000000'>");
+document.write(bsWeek+"</span><br>"+"<hr  width='60'  ></b><font  color=#666666>");
+document.write(bsYear+"<br>"+bsYear2+"</td></tr></table>");
+}
+time()
+//-->
+</script>
+    </div>
+    <!----------------------------------------------广告一完成--------------------------------------------->
+        
+<!-------------------------------------------------------主容器开始-------------------------->
+ 
+<div id="container">
+  <!-----------------------------------------------导航开始--------------------------------->
+  <div id="navigation"><img src="images/US61/daohang4.jpg" border="0" usemap="#Map" />
+    <map name="Map" id="Map">
+      <area shape="circle" coords="255,195,29" href="index.html" />
+      <area shape="circle" coords="399,192,27" href="#" />
+      <area shape="circle" coords="400,209,10" href="#" />
+      <area shape="circle" coords="396,195,8" href="#" />
+      <area shape="circle" coords="520,192,26" href="#" />
+      <area shape="circle" coords="648,192,26" href="#" />
+    </map>
+ <a name="backtop"></a>
+  </div>
+  <!-----------------------------------------------导航结束--------------------------------->
+  <!-----------------------------------------------上部开始--------------------------------->
+  <div id="top">
+ 
+ <table id="top_table" border="1"  cellspacing="1"  bgcolor="#CCCCCC" cellpadding="1" >
+           <tr >
+               <td bgcolor="#FFFFFF" onmouseover="this.bgColor='#66FFFF'" onmouseout="this.bgColor='#FFFFFF'"><br/><br/>
+               <img src='images/US61/tubiao/sheying.jpg' /><br/><br/><br/><br/>&nbsp;&nbsp;&nbsp; 
+               <a href="" style="text-decoration:none;">爱摄影</a></td>
+               <td bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFCCCC'" onmouseout="this.bgColor='#FFFFFF'"><br/><br/><img src="images/US61/tubiao/dengshan.jpg" /><br/><br/><br/><br/><a href="">登山者</td></a>
+               <td bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFFF66'" onmouseout="this.bgColor='#FFFFFF'"><br/><br/><img src="images/US61/tubiao/shehua.jpg" /><br/><br/><br/><br/><a href="">奢华游</a></td>
+                <td bgcolor="#FFFFFF" onmouseover="this.bgColor='#CCFFCC'" onmouseout="this.bgColor='#FFFFFF'"><br/><br/><img src="images/US61/tubiao/qixing.jpg" /><br/><br/><br/><br/><a href="">&nbsp;骑行</a></td>
+           </tr>
+           <tr>
+               <td bgcolor="#FFFFFF" onmouseover="this.bgColor='#99CCCC'" onmouseout="this.bgColor='#FFFFFF'"><br/><br/><img src="images/US61/tubiao/meinv.jpg" /><br/><br/><br/>&nbsp;&nbsp;<a href="">看美铝</a></td>
+               <td bgcolor="#FFFFFF" onmouseover="this.bgColor='#CCCCFF'" onmouseout="this.bgColor='#FFFFFF'"><br/><br/><img src="images/US61/tubiao/gouwu.jpg" /><br/><br/><br/>&nbsp;&nbsp;<a href="">购物狂</a></td>
+               <td bgcolor="#FFFFFF" onmouseover="this.bgColor='#99CCFF'" onmouseout="this.bgColor='#FFFFFF'"><br/><br/><img src="images/US61/tubiao/meishi.jpg" /><br/><br/><br/><br/>&nbsp;&nbsp;<a href="">美食控</a></td>
+               <td bgcolor="#FFFFFF" onmouseover="this.bgColor='#FF6600'" onmouseout="this.bgColor='#FFFFFF'"><br/><br/><img src="images/US61/tubiao/luying.jpg" /><br/><br/><br/><a href="">&nbsp;露营</a></td>
+           </tr>
+ </table>
+  
+  </div>
+  <!-----------------------------------------------上部结束--------------------------------->
+   <!-----------------------------------------------主体开始--------------------------------->
+  <div id="content">
+  <!-----------------------------------------------主体左侧开始--------------------------------->
+   <div id="content_left">
+  
+   </div>
+   <!-----------------------------------------------主体左侧结束--------------------------------->
+   <!-----------------------------------------------主体中部开始--------------------------------->
+   <div id="content_middle">
+   <div align="right">
+<a href="javascript:menu.expand()" target="_self">粗现</a> | 
+<a href="javascript:menu.contract()" target="_self">看着烦？</a> | 
+<a href="javascript:menu.stop()" target="_self">眼晕？</a> | 
+<a href="javascript:menu.rotate()" target="_self">炫一下！</a> | 
+<a href="javascript:menu.changeDir()" target="_self">不走寻常路</a>
+</div> 
+<div id="spin">
+<div class="spin"><a href="#cost">费用</a></div> 
+<div class="spin"><a href="#way">交通</a></div> 
+<div class="spin"><a href="#xinqing">美食</a></div> 
+<div class="spin"><a href="#hotel">旅店</a></div> 
+<div class="spin"><a href="#trip">行程</a></div> 
+<div class="spin"><a href="#thing">行李</a></div> 
+<div class="spin"><a href="#tip">贴士</a></div> 
+</div>
+   </div>
+   <!-----------------------------------------------主体中部结束--------------------------------->
+  <!-----------------------------------------------主体右侧开始--------------------------------->
+  <div id="content_right">
+  
+  </div>
+  <!-----------------------------------------------主体右侧结束--------------------------------->
+  </div>
+  <!-----------------------------------------------主体结束--------------------------------->
+  <!-----------------------------------------------尾部开始--------------------------------->
+  <div id="footer">
+  <!-----------------------------------------------尾部左侧开始--------------------------------->
+  <div id="footer_left">
+  <!-----------------------------------------------尾部左侧上部开始--------------------------------->
+  <div id="footer_left_top">
+  <p><br />
+          <h1>小蚂蚁的游记</h1><hr />
+  早就对西安美食有所耳闻，十分向往之。。。这次有两个朋友去西安走亲戚，拉我们一同去玩，欣然同意。随即展开了四天三晚的自驾游旅程。 
+长相思，在长安。当我第一眼看到那雄伟迤逦的也许从唐朝就在等我的古城墙时，我有的是去敲叩门环的冲动。西安，我沿现代的驿道而来，想赴的却是一个千年的约会。
+  </p>
+  <p><br />
+          <h1><a name="cost">费用及预算</a></h1><hr />
+
+油费过路费为两家平摊，油费来回为820元，过路费来回为780元。这次旅行我和老公两人共花费2000元。
+
+  </p>
+  <p><br />
+          <h1><a name="way">交通方式</a></h1><hr />
+    这次我们一行四人，济南出发，全程高速，单程一千多公里，八个多小时
+  </p>
+  <p><br />
+          <h1><a name="xinqing">美食</a></h1><hr />
+  中午在郑州北服务区休整了一下。服务区饭菜难吃又死贵，我们吃自带的食物，只点了两份小菜和几碗稀饭，花费50元。
+冰峰”在西安可谓无人不知、无人不晓，在西安已经有了58年历史。在世界级饮料品牌的强势夹攻下，冰峰顽强地生存下来，而且越战越猛。“冰峰”是一种甜甜的桔子味汽水，我们每餐必喝
+
+  </p>
+   <p><br />
+          <h1><a name="hotel">旅店信息</a></h1><hr />
+  在汉庭快捷酒店住下，金卡入住高级大床房202元一晚。酒店比较干净，房间不大，步行到大雁塔广场十分钟。因为去夜市喝酒，打车去回民街。
+
+  </p>
+  <p><br />
+          <h1><a name="trip">行程安排</a></h1><hr />
+  我们选择的线路是由西峰出发，坐索道上山，游览各山峰后由北峰坐索道下山。
+这里不得不提是华山索道，号称亚洲第一五星级索道。惊险刺激，索道会突然加速，速度也较快，十分好玩。限坐8人。
+【门票】180元/2天
+【索道】西峰单程140元，北峰单程80元
+  </p>
+  <p><br />
+          <h1><a name="thing">行李准备</a></h1><hr />
+  我带了一个行李箱 记得带花露水哦
+  </p>
+  <p><br />
+          <h1><a name="tip">心情与TIP</a></h1><hr />
+  <br/>1不管你是自由行还是自驾游，都要做好防晒。不要以为只有去海边玩才需要防晒。你以为逛个街爬个山就不用防晒那就错了，你以为山上都是树木阴凉不用防晒那就更是大错特错。我老公就是犯了以上两点错误，晒伤…
+ <br/>2进入景区前最好带点巧克力、肉干等零食，多带矿泉水，景区内食物和水价格昂贵。当然土豪们请无视…
+  <br/>3西安夜生活丰富，晚上打车人较多，十一点后不好打车，部分出租车司机会坐地起价，请根据自己情况安排好时间。
+  <br/>4已经晚上十点，回民街依旧热闹非凡，我俩吃货迫不及待开始品尝美食。经过一番品尝，不管是游记上推荐的有名气的店铺，还是我们随意找的小吃，给我们的感觉是名气大味道一般般。价格贵不说，服务态度挺差，询问价格说一次后一般就不搭理了，问一些情况要对店家说好几次，也不一定回答，有些连头都不抬。而且我们之中还有个说陕西话的本地人，她也很无语。。。
+之后她带我们吃的其它地方的肉夹馍，羊肉泡馍，烤肉等陕西特色食物，都比这里好吃。。。
+西安第一站，有些小失望。。。<br/><br/><br/>
+  </p>
+  </div>
+  <!-----------------------------------------------尾部左侧上部结束--------------------------------->
+  </div>
+  <!-----------------------------------------------尾部左侧结束--------------------------------->
+  <!-----------------------------------------------尾部右侧开始--------------------------------->
+  <div id="footer_right">
+   <!-----------------------------------------------尾部右侧上部开始--------------------------------->
+  <div id="footer_right_top">
+  <img src="images/US61/fabiao1.jpg" border="0" usemap="#Map2" />
+  <map name="Map2" id="Map2">
+    <area shape="rect" coords="0,-3,164,70" href="index.html" />
+  </map>
+  </div>
+  <!-----------------------------------------------尾部右侧上部结束--------------------------------->
+  <!-----------------------------------------------尾部右侧中部开始--------------------------------->
+  <div id="footer_right_middle">
+  <a href="tuce.html" style=" text-decoration:none " >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<font color="#000000">我的相册>></font></a><br/>
+  
+    <!--------------------------------幻灯图片开始-----------------------------------> 
+                  
+        	
+			  <script>
+				var widths=200; //设置幻灯片宽度
+				var heights=220; //设置幻灯片高度
+				var counts=4; //设置幻灯片数量
+				//设置图片路径
+				img1=new Image ();img1.src='images/US61/xiangce1.jpg';
+				img2=new Image ();img2.src='images/US61/xiangce2.jpg';
+				img3=new Image ();img3.src='images/US61/xiangce3.jpg';
+				img4=new Image ();img4.src='images/US61/xiangce4.jpg';
+				
+				
+				//设置图片的URL
+				url1=new Image ();url1.src='p2.html';
+				url2=new Image ();url2.src='p2.html';
+				url3=new Image ();url3.src='p2.html';
+				url4=new Image ();url4.src='p2.html';
+				
+				
+				
+				var nn=1;
+				var key=0;
+				function change_img()
+				{if(key==0){key=1;}
+				else if(document.all)
+				{document.getElementById("pic").filters[0].Apply();document.getElementById("pic").filters[0].Play(duration=2);}
+				eval('document.getElementById("pic").src=img'+nn+'.src');
+				eval('document.getElementById("url").href=url'+nn+'.src');
+				for (var i=1;i<=counts;i++){document.getElementById("xxjdjj"+i).className='axx';}
+				document.getElementById("xxjdjj"+nn).className='bxx';
+				nn++;if(nn>counts){nn=1;}
+				//设置图片切换间隔时间
+				tt=setTimeout('change_img()',3000);}  //图片切换时间毫秒
+				function changeimg(n){nn=n;window.clearInterval(tt);change_img();}
+				document.write('<style>');
+				document.write('.axx{padding:1px 10px;border-left:#cccccc 1px solid;}');
+				document.write('a.axx:link,a.axx:visited{text-decoration:none;color:#fff;line-height:12px;font:9px sans-serif;background-color:#1587E0;}');
+				document.write('a.axx:active,a.axx:hover{text-decoration:none;color:#fff;line-height:12px;font:9px sans-serif;background-color:#80BBD9;}');
+				document.write('.bxx{padding:1px 7px;border-left:#cccccc 1px solid;}');
+				document.write('a.bxx:link,a.bxx:visited{text-decoration:none;color:#fff;line-height:12px;font:9px sans-serif;background-color:#80BBD9;}');
+				document.write('a.bxx:active,a.bxx:hover{text-decoration:none;color:#fff;line-height:12px;font:9px sans-serif;background-color:#80BBD9;}');
+				document.write('</style>');
+				document.write('<div style="width:'+widths+'px;height:'+heights+'px;overflow:hidden;text-overflow:clip;">');
+				document.write('<div><a id="url"><img id="pic" style="border:0px;filter:progid:dximagetransform.microsoft.wipe(gradientsize=1.0,wipestyle=4, motion=forward)" width='+widths+' height='+heights+' /></a></div>');
+				document.write('<div style="filter:alpha(style=1,opacity=10,finishOpacity=80);background: #80BBD9;width:100%-2px;text-align:right;top:-12px;position:relative;margin:1px;height:12px;padding:0px;margin:0px;border:0px;">');
+				for(var i=1;i<counts+1;i++){document.write('<a href="javascript:changeimg('+i+');" id="xxjdjj'+i+'" class="axx" target="_self">'+i+'</a>');}
+				document.write('</div></div>');
+				change_img();
+				</script>
+                	
+                  
+                  <!--------------------------幻灯图片结束---------------------------------------->
+                     
+  </div>
+  <!-----------------------------------------------尾部右侧中部结束--------------------------------->
+   <!-----------------------------------------------尾部右侧下部开始--------------------------------->
+   <div id="footer_right_footer">
+   <select id="select">
+                        <option value="0">DAY1 |2014,07,05 济南（中国 山东）---西安（中国 陕西）</option>
+                        <option value="天津">DAY2|2014,07,06上午游览兵马俑，下午华清池</option>
+                        <option value="2">DAY3|2014,07,07游览西岳华山</option>
+                        <option value="33">DAY4|2014,07,08返回济南</option>       	
+    
+    
+    </select>
+     <br />  
+      <br /> <br />  <br />  <br /><br /> <br />  <br />  <br />  <br />  <br />  <br />  <br />  <br />  <br />  <br />  <br />  <br />  <br />  <br /> 
+      <a href="#backtop"><img src="images/US61/TOP.jpg"  border="0">  </a>
+  
+   </div>
+   <!-----------------------------------------------尾部右侧下部结束--------------------------------->
+  
+  </div>
+  <!-----------------------------------------------尾部右侧结束--------------------------------->
+  
+  </div>
+  <!-----------------------------------------------尾部结束--------------------------------->
+
+</div>
+<!-----------------------------------------------主容器结束--------------------------------->
+<!------------------------------------world end----------------------------->
+<br/><br/><br/><br/><br/><br/><br/><br/><div id="footer2">
+    <hr/>
+	<ul>
+		<li><center>关于On the way | 投资者关系 | 酒店加盟 | 业务合作 | 职位招聘 | 我要投诉 | 安全中心 |About us</center></li>
+        <li><center>Copyright ©2014 Ontheway.com京公网安备110108901531京ICP备05021088号在路上网客服电话10011234</center></li>
+        <center> <li><img src="images/US60/renzheng.jpg"></li></center> 
+	</ul>
+</div>
+</body>
+</html>
