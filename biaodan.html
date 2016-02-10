@@ -1,0 +1,262 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>On the way_用户注册</title>
+<style type="text/css">
+body{margin:0px;}
+#container{ height:1000px; width:1300px; margin:0px auto; margin-top:0px;}
+#top{height:100px;width:100%;}
+	#top #top_left{background-color:#FFF;height:100%;width:600px;float:left;}
+	#top #top_right{background-color:#FFF;height:100%;width:700px;float:left;}
+		#top #top_right ul li{ margin-left:500px; font-size:24px; margin-top:30px; list-style:none;}
+#content{/*background-color:#6F0;*/height:728px;width:100%}
+	#content #content_left{/*background-color:#F00;*/ height:100%;width:50%;float:left; margin-left:150px;}
+	#content #content_right{ background-color:#FFF;height:100%; width:30%;float:left;}
+		#content_right ul li{font-size:14px; margin-top:30px; list-style:none;}
+#footer{/*background-color:#6FF;*/ height:150px;width:100%}
+	#footer ul li{ margin:0px auto; list-style:none; color:#666; font-size:16px; margin-top:10px;}
+</style>
+<script language="javascript">
+	function checkForm()
+	{		
+		//用户名验证
+		var uname =  document.getElementById("uname").value;
+		//非空验证
+		if(uname=="")
+		{
+			alert("用户名不能为空");
+			return false;
+		}
+		
+		//长度
+		if(uname.length<6 || uname.length>16)
+		{
+			alert("用户名长度应该在6-16位之间");
+			return false;
+		}
+		
+		//密码验证
+		var upass1 = document.getElementById("upass1").value;
+		if(upass1=="" || upass1.length==0)
+		{
+			alert("密码不能为空");
+			return false;
+		}
+		var upass2 = document.getElementById("upass2").value;
+		if(upass1 != upass2)
+		{
+			alert("两次密码不一致");
+			return false;
+		}
+		
+		//头像必须上传
+		var myImg=document.getElementById("myImg").value;
+		if(myImg=="" || myImg.length==0)
+		{
+			alert("必须上传一张头像");	
+			return false;
+		}
+				
+		myImg=myImg.substring(myImg.length-3, myImg.length);
+		if(myImg =="jpg" || myImg =="gif" || myImg =="png")
+		{			
+		}
+		else
+		{
+			alert("图片格式有误！");	
+			return false;	
+		}
+		
+		
+		
+		//邮箱
+		var myemail = document.getElementById("myemail").value;
+		var Email = /^([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+@([a-zA-Z0-9]+[_|\_|\.]?)*[a-zA-Z0-9]+\.[a-zA-Z]{2,3}$/;
+		if(!Email.test(myemail))
+		{
+			alert("邮箱格式有误！");
+			return false;
+		}
+		
+		//手机
+		var mymobile= document.getElementById("mymobile").value;
+		var Mobile=/^((13[0-9]{1})|159|153|186)+\d{8}$/;
+		if(!Mobile.test(mymobile))
+		{
+			alert("手机号输入有误！");	
+			return false;
+		}
+		
+	}
+</script>
+</head>
+<body>
+
+
+<!------------主体开始------------>
+<div id="container">
+<!------------头部开始------------>
+<div id="top">
+<!------------头部左侧开始------------>
+<div id="top_left">
+<img src="images/US60/logo2.jpg" />
+</div>
+<!------------头部左侧结束------------>
+<!------------头部右侧开始------------>
+<div id="top_right" >
+	<ul>
+		<li>首页||帮助</li>
+	</ul>
+</div>
+<!------------头部右侧结束------------>
+</div>
+<!------------头部结束------------>
+<!------------中部开始------------>
+<div id="content">
+<!------------中部左侧开始------------>
+<div id="content_left">
+<form action="okay.html" method="post" onsubmit="return checkForm();" >
+    	<table align="center" cellspacing="1" bgcolor="#399" style="color:#399; font-size:14px; width:600px;"  cellpadding="5px">
+        	<tr style="background-color:#399; height:50px; font-size:24px; text-align:center; font-weight:bolder; color:#FFF;">
+            	<td colspan="2" >用户注册</td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>用户名：</td>
+                <td><input type="text" id="uname" style=" width:200px;" />                  *</td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>昵称：</td>
+                <td><input type="text" id="aname" style=" width:200px;" /></td>
+            </tr>
+             <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>密码：</td>
+                <td><input type="password" name="" id="upass1" style="width:200px;" />                  *</td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>重复密码：</td>
+                <td><input type="password" name="" id="upass2" style="width:200px;" />                  *</td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>性别：</td>
+                <td><input type="radio" name="sex" checked="checked" />男  <input type="radio" name="sex" />女</td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>年龄：</td>
+                <td><input type="text" id="age" style=" width:200px;" /></td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>生日：</td>
+                <td>
+                    <select id="z_month">
+                        <option value="0">请选择</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>   
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>    
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>	
+                    </select>
+                    月
+                    <select id="z_day">
+                       <option value="0">请选择</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>   
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                        <option value="6">6</option>
+                        <option value="7">7</option>
+                        <option value="8">8</option>    
+                        <option value="9">9</option>
+                        <option value="10">10</option>
+                        <option value="11">11</option>
+                        <option value="12">12</option>
+                        <option value="13">13</option>   
+                        <option value="14">14</option>
+                        <option value="15">15</option>
+                        <option value="16">16</option>
+                        <option value="17">17</option>
+                        <option value="18">18</option>    
+                        <option value="19">19</option>
+                        <option value="20">20</option>
+                        <option value="21">21</option>
+                        <option value="22">22</option>
+                        <option value="23">23</option>   
+                        <option value="24">24</option>
+                        <option value="25">25</option>
+                        <option value="26">26</option>
+                        <option value="27">27</option>
+                        <option value="28">28</option>    
+                        <option value="29">29</option>
+                        <option value="30">30</option>  
+                        <option value="31">31</option>   	
+                    </select>
+                    日
+                </td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>旅行方式：</td>
+                <td><input type="checkbox" checked="checked" /> 背包自助游<input type="checkbox" /> 野游<input type="checkbox" /> 跟团旅游<input type="checkbox" /> 静态旅游</td>
+            </tr>
+             <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>头像</td>
+                <td><input type="file" id="myImg" />                  *</td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>所在城市</td>
+                
+                  <td><input type="text" id="city" style=" width:200px;" /></td>    
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>邮箱：</td>
+                <td><input type="text" id="myemail" />                  *</td>
+            </tr>
+            <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>手机：</td>
+                <td><input type="text" id="mymobile" />                  *</td>
+            </tr>
+             <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td>简介：</td>
+                <td><textarea rows="10" cols="30"></textarea></td>
+            </tr>
+             <tr bgcolor="#FFFFFF" onmouseover="this.bgColor='#FFC733'" onmouseout="this.bgColor='#FFFFFF'">
+            	<td colspan="2" style="text-align:center;"><input type="submit" value="立即注册"  /> <input type="reset" value="重新填写" /></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<!------------中部左侧结束------------>
+<!------------中部右侧开始------------>
+<div id="content_right">
+	<ul>
+		<li><b>注册成为"On the way"的用户后，您可以：</b></li>
+         <li>①畅游与On the way合作的机票、酒店、度假代理商网站，轻松管理订单</li>
+         <li>②查询、计划、管理您的预订信息</li>
+         <li>③享受优质超低价格团购服务</li>
+         <li><img src="images/US60/39046461716847d16886324a.jpg" /></li>
+	</ul>
+</div>
+<!------------中部右侧结束------------>
+</div>
+<!------------中部结束------------>
+<!------------尾部开始------------>
+<div id="footer">
+	<ul>
+		<li><center>关于On the way | 投资者关系 | 酒店加盟 | 业务合作 | 职位招聘 | 我要投诉 | 安全中心 |About us</center></li>
+        <li><center>Copyright ©2014 Ontheway.com京公网安备110108901531京ICP备05021088号在路上网客服电话10011234</center></li>
+        <li><center><img src="images/US60/renzheng.jpg" /><center></li>
+	</ul>
+</div>
+<!------------尾部结束------------>	
+<!------------主体结束------------>
+</div>
+</body>
+</html>
